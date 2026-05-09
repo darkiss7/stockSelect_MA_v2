@@ -48,3 +48,13 @@ SELECTOR_CONDITIONS = ['MakingChips', 'bitBoard', 'golden', 'golden2', 'rabbit',
 # False: 盘后一次性更新
 RUN_REALTIME = True
 DATA_UPDATED = False  # True: 直接计算不更新数据
+
+# ================== 回测参数 ==================
+HOLD_DAYS = 5              # 持有天数
+INITIAL_CAPITAL = 100000   # 初始资金（元）
+COMMISSION = 0.00025       # 佣金（万2.5，双向）
+STAMP_TAX = 0.001          # 印花税（千1，卖出时收取）
+SLIPPAGE = 0.0001          # 滑点（万1，买入和卖出各一次）
+
+# ================== 基准配置 ==================
+BENCHMARK = '000300.SH'    # 沪深300指数代码
