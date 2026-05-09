@@ -3,25 +3,28 @@
 """
 import pandas as pd
 import time
+import tushare as ts
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from .config import MAX_WORKERS_FETCH, REQUEST_INTERVAL, MA_DIR, DATA_DIR
+from .config import MAX_WORKERS_FETCH, REQUEST_INTERVAL, MA_DIR, DATA_DIR, TUSHARE_API_TOKEN
 from .utils import wait_for_request_slot, get_latest_trade_date
 
 
-def fetch_realtime_batch(stock_codes, pro):
+def fetch_realtime_batch(stock_codes):
     """批量获取实时行情（新浪接口）"""
     try:
         codes_str = ",".join(stock_codes)
         time.sleep(REQUEST_INTERVAL)
-        df = pro.realtime_quote(ts_code=codes_str)
+        # 注意：必须用 ts.realtime_quote()，不能用 pro.realtime_quote()
+        # pro 不支持批量查询
+        df = ts.realtime_quote(ts_code=codes_str)
         return df
     except Exception as e:
         print(f"批量获取实时数据出错: {e}")
         return pd.DataFrame()
 
 
-def fetch_all_realtime(stock_list, pro, batch_size=870):
+def fetch_all_realtime(stock_list, batch_size=870):
     """获取所有股票实时行情"""
     stock_codes = stock_list['ts_code'].tolist()
     all_data = pd.DataFrame()
@@ -29,7 +32,7 @@ def fetch_all_realtime(stock_list, pro, batch_size=870):
     start_time = datetime.now()
     for i in range(0, len(stock_codes), batch_size):
         batch = stock_codes[i:i + batch_size]
-        df = fetch_realtime_batch(batch, pro)
+        df = fetch_realtime_batch(batch)
         if not df.empty:
             all_data = pd.concat([all_data, df], ignore_index=True)
 

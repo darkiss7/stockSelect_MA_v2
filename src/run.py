@@ -70,7 +70,7 @@ def main():
         if RUN_REALTIME:
             print("模式: 盘中实时更新")
             # 获取所有实时数据
-            fetch_all_realtime(stock_list, pro)
+            fetch_all_realtime(stock_list)
         else:
             print("模式: 盘后更新")
             start_request_controller()
